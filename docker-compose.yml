@@ -1,30 +1,37 @@
-geoserver:
-  build: .
-  dockerfile: Geoserver.dockerfile
-  ports:
-    - "8081:8081"
-  volumes_from:
+version: "2.6"
+services:
+  geoserver:
+   build:
+     context: .
+     dockerfile: Geoserver.dockerfile
+   ports:
+     - "8081:8081"
+   volumes_from:
     - assets-data
     - geoserver-data
-www:
-  build: .
-  dockerfile: Gdalserver.dockerfile
-  ports:
-    - "80:80"
-  links:
-    - geoserver
-  volumes_from:
-    - assets
-    - assets-data
-assets:
-  build: .
-  dockerfile: Assets.dockerfile
-  command: watch
-assets-data:
-  build: .
-  dockerfile: Assets-data.dockerfile
-  command: tail -f /dev/null
-geoserver-data:
-  build: .
-  dockerfile: Geoserver-data.dockerfile
-  command: tail -f /dev/null
+  www:
+    build:
+      context: .
+      dockerfile: Gdalserver.dockerfile
+    ports:
+      - "80:80"
+    links:
+      - geoserver
+    volumes_from:
+     - assets
+     - assets-data
+  assets:
+    build:
+      context: .
+      dockerfile: Assets.dockerfile
+    command: watch
+  assets-data:
+    build:
+      context: .
+      dockerfile: Assets-data.dockerfile
+    command: tail -f /dev/null
+  geoserver-data:
+    build:
+      context: .
+      dockerfile: Geoserver-data.dockerfile
+    command: tail -f /dev/null
